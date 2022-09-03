@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 import getRandomImageDog from "../../services/getRandomImageDog";
 
-const useGetRandomImageDog = (breed) => {
+const useGetRandomImageDog = (breedSelected = "retriever/golden") => {
   const [imageDog, setImageDog] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getRandomImage = async () => {
+  const getRandomImage = async (breed = breedSelected) => {
     try {
       setLoading(true);
 

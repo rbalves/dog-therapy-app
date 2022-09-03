@@ -1,14 +1,18 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+
+import { Center, NativeBaseProvider } from "native-base";
 
 const Layout = ({ children, title = "" }) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text style={styles.pageTitle}>Dog Therapy 🐶 ❤️</Text>
-      </View>
-      {title && <Text style={styles.pageSubTitle}>{title}</Text>}
-      {children}
-    </SafeAreaView>
+    <NativeBaseProvider>
+      <Center flex={1} px="3" safeArea>
+        <View>
+          <Text style={styles.pageTitle}>Dog Therapy 🐶 ❤️</Text>
+        </View>
+        {title && <Text style={styles.pageSubTitle}>{title}</Text>}
+        {children}
+      </Center>
+    </NativeBaseProvider>
   );
 };
 

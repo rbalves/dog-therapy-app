@@ -1,25 +1,59 @@
-import { Image, StyleSheet, Text, View, Pressable } from "react-native";
+import { useState } from "react";
+
+import { Image, Pressable, StyleSheet, Text } from "react-native";
+
+import { CheckIcon, Select } from "native-base";
+
 import Layout from "./src/components/Layout";
 import Loading from "./src/components/Loading";
 import NotFound from "./src/components/NotFound";
+
+import useGetAllBreeds from "./src/hooks/useGetAllBreeds";
 import useGetRandomImageDog from "./src/hooks/useGetRandomImageDog";
 
 export default function App() {
-  const breed = "retriever/golden";
+  const [breedSelected, setBreedSelected] = useState("retriever/golden");
 
-  const { loading, imageDog, error, getRandomImage } =
-    useGetRandomImageDog(breed);
+  const { breeds, error: errorGetBreeds, loading: loadingGetBreeds } = useGetAllBreeds();
 
-  if (error || !imageDog) {
+  const { loading: loadingGetImage, imageDog, error: errorGetImage, getRandomImage } = useGetRandomImageDog(breedSelected);
+
+  if (loadingGetImage || loadingGetBreeds) {
+    return <Loading />;
+  }
+
+  if (errorGetImage || errorGetBreeds) {
     return <NotFound />;
   }
 
   return (
     <Layout>
+      <Select
+        selectedValue={breedSelected}
+        minWidth="100%"
+        minHeight="50"
+        accessibilityLabel="Choose Breed"
+        placeholder="Choose Breed"
+        _selectedItem={{
+          endIcon: <CheckIcon size="5" />,
+        }}
+        mt={1}
+        onValueChange={(itemValue) => {
+          setBreedSelected(itemValue);
+          getRandomImage(itemValue);
+        }}
+      >
+        {breeds.map(({ label, value }) => (
+          <Select.Item key={value} label={label} value={value} />
+        ))}
+      </Select>
       <Image source={{ uri: imageDog }} style={styles.image} />
-      <Pressable onPress={() => getRandomImage(breed)} style={styles.button}>
+      <Pressable
+        onPress={() => getRandomImage(breedSelected)}
+        style={styles.button}
+      >
         <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 24 }}>
-          Next 🐶 ❤️{" "}
+          Next
         </Text>
       </Pressable>
     </Layout>
@@ -28,8 +62,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   image: {
-    height: "80%",
-    width: "90%",
+    height: "75%",
+    width: "100%",
     borderRadius: 5,
     marginVertical: 12,
   },
@@ -41,5 +75,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
+    width: "100%",
   },
 });
