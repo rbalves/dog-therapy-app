@@ -1,5 +1,7 @@
 import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import Layout from "./src/components/Layout";
+import Loading from "./src/components/Loading";
+import NotFound from "./src/components/NotFound";
 import useGetRandomImageDog from "./src/hooks/useGetRandomImageDog";
 
 export default function App() {
@@ -8,28 +10,8 @@ export default function App() {
   const { loading, imageDog, error, getRandomImage } =
     useGetRandomImageDog(breed);
 
-  if (loading) {
-    return (
-      <Layout>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={{ fontSize: 24 }}>Looking for more love...😍 </Text>
-        </View>
-      </Layout>
-    );
-  }
-
   if (error || !imageDog) {
-    return (
-      <Layout>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={{ fontSize: 24 }}>No dogs found 😢 </Text>
-        </View>
-      </Layout>
-    );
+    return <NotFound />;
   }
 
   return (
